@@ -167,10 +167,10 @@ function onDocumentKeyUp(event) {
   }
   light.position = camera.position;
   
-  if (key == '9') {
+  if (key == '=' || key == '+') {
     camera.position.z -= 10;
   }
-  if (key == '0') {
+  if (key == '-') {
     camera.position.z += 10;
   }
   
