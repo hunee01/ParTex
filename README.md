@@ -1,1 +1,1 @@
-# JsPartix
+# setup soon
