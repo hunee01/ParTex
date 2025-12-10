@@ -1,5 +1,6 @@
 //ENV VAR
 const k = 8.99 * Math.pow(10,2);
+const G = 6.67 * Math.pow(10,-10);
 
 //SCENE
 const scene = new THREE.Scene(); 
@@ -26,6 +27,7 @@ function spawnParticle(q,x,y,vx,vy) {
   mesh.userData.netVy = vy;
   mesh.userData.mass = 0;
   mesh.userData.hadron = 0;
+  mesh.userData.decayOrigin = 0;
   
   switch (q) {
     case 0:
@@ -95,7 +97,7 @@ function spawnParticle(q,x,y,vx,vy) {
     case 200:      
       mesh.userData.type = 'u';
       mesh.material.color.setHex(0xff8080);
-      mesh.userData.charge = 2/3;
+      mesh.userData.charge = 1.068;
       mesh.userData.mass = 4.5;
       mesh.scale.setScalar(0.5);
       mesh.userData.hadron = 1;
@@ -108,10 +110,42 @@ function spawnParticle(q,x,y,vx,vy) {
       mesh.scale.setScalar(0.5);
       mesh.userData.hadron = 1;
       break;
+    case 220:      
+      mesh.userData.type = 'c';
+      mesh.material.color.setHex(0xff80ff);
+      mesh.userData.charge = 1.068;
+      mesh.userData.mass = 2500;
+      mesh.scale.setScalar(0.75);
+      mesh.userData.hadron = 1;
+      break;
+    case 230:      
+      mesh.userData.type = 's';
+      mesh.material.color.setHex(0x80ff80);
+      mesh.userData.charge = -0.534;
+      mesh.userData.mass = 200;
+      mesh.scale.setScalar(0.75);
+      mesh.userData.hadron = 1;
+      break;
+    case 240:      
+      mesh.userData.type = 't';
+      mesh.material.color.setHex(0x800000);
+      mesh.userData.charge = 1.068;
+      mesh.userData.mass = 313103;
+      mesh.scale.setScalar(1);
+      mesh.userData.hadron = 1;
+      break;
+    case 250:      
+      mesh.userData.type = 'b';
+      mesh.material.color.setHex(0x000080);
+      mesh.userData.charge = -0.534;
+      mesh.userData.mass = 8219;
+      mesh.scale.setScalar(1);
+      mesh.userData.hadron = 1;
+      break;
     case 201:      
       mesh.userData.type = 'ubar';
       mesh.material.color.setHex(0x80ffff);
-      mesh.userData.charge = -2/3;
+      mesh.userData.charge = -1.068;
       mesh.userData.mass = 4.5;
       mesh.scale.setScalar(0.5);
       mesh.userData.hadron = 1;
@@ -119,17 +153,81 @@ function spawnParticle(q,x,y,vx,vy) {
     case 211:      
       mesh.userData.type = 'dbar';
       mesh.material.color.setHex(0xffff80);
-      mesh.userData.charge = 1/3;
+      mesh.userData.charge = 0.534;
       mesh.userData.mass = 9.4;
       mesh.scale.setScalar(0.5);
       mesh.userData.hadron = 1;
       break;
+    case 221:      
+      mesh.userData.type = 'cbar';
+      mesh.material.color.setHex(0x007f00);
+      mesh.userData.charge = -1.068;
+      mesh.userData.mass = 2500;
+      mesh.scale.setScalar(0.75);
+      mesh.userData.hadron = 1;
+      break;
+    case 231:      
+      mesh.userData.type = 'sbar';
+      mesh.material.color.setHex(0x7f007f);
+      mesh.userData.charge = 0.534;
+      mesh.userData.mass = 200;
+      mesh.scale.setScalar(0.75);
+      mesh.userData.hadron = 1;
+      break;
+    case 241:      
+      mesh.userData.type = 'tbar';
+      mesh.material.color.setHex(0x007f7f);
+      mesh.userData.charge = -1.068;
+      mesh.userData.mass = 313103;
+      mesh.scale.setScalar(1);
+      mesh.userData.hadron = 1;
+      break;
+    case 251:      
+      mesh.userData.type = 'bbar';
+      mesh.material.color.setHex(0x7f7f00);
+      mesh.userData.charge = 0.534;
+      mesh.userData.mass = 8219;
+      mesh.scale.setScalar(1);
+      mesh.userData.hadron = 1;
+      break;
     case 30:
       mesh.userData.type = 'photon';
-      mesh.material.color.setHex(0xffcc00);
+      mesh.material.color.setHex(0xffcc80);
       mesh.userData.charge = 0;
       mesh.userData.mass = 0;
       mesh.scale.setScalar(0.25);
+      mesh.userData.hadron = 0;
+      break;
+    case 40:
+      mesh.userData.type = 'w';
+      mesh.material.color.setHex(0xffcc00);
+      mesh.userData.charge = 1;
+      mesh.userData.mass = 157260;
+      mesh.scale.setScalar(1.25);
+      mesh.userData.hadron = 0;
+      break;
+    case 41:
+      mesh.userData.type = 'wbar';
+      mesh.material.color.setHex(0x00ccff);
+      mesh.userData.charge = -1;
+      mesh.userData.mass = 157260;
+      mesh.scale.setScalar(1.25);
+      mesh.userData.hadron = 0;
+      break;
+    case 50:
+      mesh.userData.type = 'z';
+      mesh.material.color.setHex(0x808080);
+      mesh.userData.charge = 0;
+      mesh.userData.mass = 178473;
+      mesh.scale.setScalar(1.3);
+      mesh.userData.hadron = 0;
+      break;
+    case 60:
+      mesh.userData.type = 'higgs';
+      mesh.material.color.setHex(0xffdd00);
+      mesh.userData.charge = 0;
+      mesh.userData.mass = 244618;
+      mesh.scale.setScalar(2);
       mesh.userData.hadron = 0;
       break;
   }
@@ -212,9 +310,45 @@ function onDocumentKeyUp(event) {
   if (key == 't') {
     spawnParticle(211,camera.position.x,camera.position.y,0,0);
   }
+  if (key == '6') {
+    spawnParticle(220,camera.position.x,camera.position.y,0,0);
+  }
+  if (key == '7') {
+    spawnParticle(230,camera.position.x,camera.position.y,0,0);
+  }
+  if (key == 'y') {
+    spawnParticle(221,camera.position.x,camera.position.y,0,0);
+  }
+  if (key == 'u') {
+    spawnParticle(231,camera.position.x,camera.position.y,0,0);
+  }
+  if (key == '8') {
+    spawnParticle(240,camera.position.x,camera.position.y,0,0);
+  }
+  if (key == '9') {
+    spawnParticle(250,camera.position.x,camera.position.y,0,0);
+  }
+  if (key == 'i') {
+    spawnParticle(241,camera.position.x,camera.position.y,0,0);
+  }
+  if (key == 'o') {
+    spawnParticle(251,camera.position.x,camera.position.y,0,0);
+  }
   
   if (key == 'g') {
     spawnParticle(30,camera.position.x,camera.position.y,20*Math.cos(Math.random() * (2 * Math.PI)),20*Math.sin(Math.random() * (2 * Math.PI)));
+  }
+  if (key == 'h') {
+    spawnParticle(40,camera.position.x,camera.position.y,0,0);
+  }
+  if (key == 'j') {
+    spawnParticle(41,camera.position.x,camera.position.y,0,0);
+  }
+  if (key == 'k') {
+    spawnParticle(50,camera.position.x,camera.position.y,0,0);
+  }
+  if (key == 'l') {
+    spawnParticle(60,camera.position.x,camera.position.y,0,0);
   }
 };
 
@@ -257,11 +391,90 @@ let render = function() {
       }
     }
     
+    //Higgs Decay
+    if (child.userData.type == 'higgs') {
+      if (Math.random() < 0.5) {
+          let aprod = Math.random() * (2 * Math.PI);
+          spawnParticle(250, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
+          spawnParticle(251, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod + (Math.PI / 2)), child.userData.netVy * Math.sin(aprod + (Math.PI / 2)));
+
+          particle.remove(child);
+      }
+    }
+    
+    //W Decay
+    if (child.userData.type == 'w') {
+      if (Math.random() < 0.1) {
+          let aprod = Math.random() * (2 * Math.PI);
+          let decayMode = child.userData.decayOrigin;
+          if (child.userData.decayOrigin == 0) {
+            decayMode = Math.random();
+          }
+        
+          if (decayMode >= 0.66) {
+            spawnParticle(200, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
+          spawnParticle(211, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod + (Math.PI / 2)), child.userData.netVy * Math.sin(aprod + (Math.PI / 2)));
+          }
+          else if (decayMode >= 0.33) {
+            spawnParticle(220, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
+          spawnParticle(231, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod + (Math.PI / 2)), child.userData.netVy * Math.sin(aprod + (Math.PI / 2)));
+          }
+          else if (decayMode >= 0.22) {
+            spawnParticle(100, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
+          }
+          else if (decayMode >= 0.11) {
+            spawnParticle(110, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
+          }
+          else {
+            spawnParticle(120, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
+          }
+
+          particle.remove(child);
+      }
+    }
+    else if (child.userData.type == 'wbar') {
+      if (Math.random() < 0.1) {
+          let aprod = Math.random() * (2 * Math.PI);
+          let decayMode = child.userData.decayOrigin;
+          if (child.userData.decayOrigin == 0) {
+            decayMode = Math.random();
+          }
+        
+          if (decayMode >= 0.66) {
+            spawnParticle(201, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
+          spawnParticle(210, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod + (Math.PI / 2)), child.userData.netVy * Math.sin(aprod + (Math.PI / 2)));
+          }
+          else if (decayMode >= 0.33) {
+            spawnParticle(221, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
+          spawnParticle(230, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod + (Math.PI / 2)), child.userData.netVy * Math.sin(aprod + (Math.PI / 2)));
+          }
+          else if (decayMode >= 0.22) {
+            spawnParticle(101, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
+          }
+          else if (decayMode >= 0.11) {
+            spawnParticle(111, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
+          }
+          else {
+            spawnParticle(121, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
+          }
+
+          particle.remove(child);
+      }
+    }
+    
     //Muon Decay
     if (child.userData.type == 'muon') {
       if (Math.random() < 0.01) {
           let aprod = Math.random() * (2 * Math.PI);
           spawnParticle(100, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
+
+          particle.remove(child);
+      }
+    }
+    else if (child.userData.type == 'muonbar') {
+      if (Math.random() < 0.01) {
+          let aprod = Math.random() * (2 * Math.PI);
+          spawnParticle(101, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
 
           particle.remove(child);
       }
@@ -281,14 +494,26 @@ let render = function() {
           particle.remove(child);
       }
     }
-    
+    else if (child.userData.type == 'tauonbar') {
+      if (Math.random() < 0.1) {
+          let aprod = Math.random() * (2 * Math.PI);
+          spawnParticle(101, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod), child.userData.netVy * Math.sin(aprod));
+          spawnParticle(111, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod + (Math.PI / 2)), child.userData.netVy * Math.sin(aprod + (Math.PI / 2)));
+          spawnParticle(201, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod + Math.PI), child.userData.netVy * Math.sin(aprod + Math.PI));
+          spawnParticle(211, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod + (Math.PI * 3/4)), child.userData.netVy * Math.sin(aprod + (Math.PI * 3/4)));
+          spawnParticle(200, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod + Math.PI), child.userData.netVy * Math.sin(aprod + Math.PI));
+          spawnParticle(210, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), child.userData.netVx * Math.cos(aprod + (Math.PI * 3/4)), child.userData.netVy * Math.sin(aprod + (Math.PI * 3/4)));
+
+          particle.remove(child);
+      }
+    }
     
     // -- ANNIHILATION --
     for (let h = 0; h < particle.children.length; h++) {
       const anti = particle.children[h];
       if (anti.userData.type === child.userData.type + 'bar') {
         let rToQ = child.position.distanceTo(anti.position);
-        if (rToQ <= child.scale.x * 2.25) {
+        if (rToQ <= child.scale.x * 3) {
           spawnParticle(30, child.position.x + (Math.random() * 2 - 1), child.position.y + (Math.random() * 2 - 1), 20*Math.acos(child.userData.netVx) + Math.PI, 20*Math.asin(child.userData.netVy) + Math.PI);
           spawnParticle(30, anti.position.x + (Math.random() * 2 - 1), anti.position.y + (Math.random() * 2 - 1), 20*Math.acos(anti.userData.netVx) - Math.PI, 20*Math.asin(anti.userData.netVy) - Math.PI);
           particle.remove(child);
@@ -333,6 +558,15 @@ let render = function() {
         vsy = Fs * Math.sin(t) * dt;
       }
       
+      // Gravity
+      let vgx = 0;
+      let vgy = 0;
+      if (child.userData.mass > 0 && other.userData.mass > 0) {
+        let Fg = G * (child.userData.mass * other.userData.mass) / Math.pow(r,2);
+        vgx = Fg * Math.cos(t) * dt;
+        vgy = Fg * Math.sin(t) * dt;
+      }
+      
       //Photon Capture
       if (child.userData.type != 'photon' && other.userData.type == 'photon') {
         if (r <= child.scale.x * 2) {
@@ -344,8 +578,8 @@ let render = function() {
       }
       
       // -- FINAL FORCE ADDITION --
-      child.userData.netVx += vex + vsx;
-      child.userData.netVy += vey + vsy;
+      child.userData.netVx += vex + vsx + vgx;
+      child.userData.netVy += vey + vsy + vgy;
     }
     if (child.userData.mass > 0) {
       child.position.x += child.userData.netVx / child.userData.mass;
